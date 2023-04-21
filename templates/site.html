@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site</title>
+    <link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}">
+</head>
+<body>
+    <div class="nav"><h2>ISERV.карта</h></div>
+    <div class="fon1">
+        <h1 class="title">Команда разработчиков</h1>
+        <div class="team">
+            <figure class="figure">
+                <div class="img">
+                    <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
+                    <figcaption>
+                        <h2>Александр Набиев</h2>
+                        <em>Backend</em>
+                    </figcaption>
+                </div>
+                <div class="img">
+                    <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
+                    <figcaption>
+                        <h2>Александр Набиев</h2>
+                        <em>Backend</em>
+                    </figcaption>
+                </div>
+                <div class="img">
+                    <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
+                    <figcaption>
+                        <h2>Александр Набиев</h2>
+                        <em>Backend</em>
+                    </figcaption>
+                </div>
+            </figure>
+        </div>
+    </div>
+    <div class="fon2"></div>
+    <div class="fon3"></div>
+    <div class="fon4">
+        <div class="fat">
+        <h1>Узнайте оптимальную точку!</h1>
+            <div class="form">
+                <form method="post" action = "upload" enctype = "multipart/form-data">
+                    <input type="file" name="file" />
+                    <input type="hidden" name="id" value="zalupa"/>
+                    <input type="submit" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function() {
+            socket.emit('processing_done', {data: 'I\'m connected!'});
+        });
+    </script>
+</body>
+</html>
