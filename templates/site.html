@@ -4,8 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Site</title>
+    <title>Site</title> 
     <link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script>
+        window.onload = function() {
+            if({% if scroll=="true"%}true{% else %}false{%endif%}){
+                var scrollHeight = Math.max(
+                    document.body.scrollHeight, document.documentElement.scrollHeight,
+                    document.body.offsetHeight, document.documentElement.offsetHeight,
+                    document.body.clientHeight, document.documentElement.clientHeight
+                );
+                window.scrollTo(0, scrollHeight);
+            }
+            {% if id %}
+            document.cookie = "id="+encodeURIComponent("{{id}}");
+            {%endif%}
+            socket.on('my_response', function(msg, cb) {
+                $('#log').append('<br>' + $('<div/>').text('logs #' + msg.count + ': ' + msg.data).html());
+                if (cb)
+                    cb();
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="nav"><h2>ISERV.карта</h></div>
@@ -13,50 +34,60 @@
         <h1 class="title">Команда разработчиков</h1>
         <div class="team">
             <figure class="figure">
-                <div class="img">
-                    <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
-                    <figcaption>
-                        <h2>Александр Набиев</h2>
-                        <em>Backend</em>
-                    </figcaption>
+                <div class = card>
+                    <div class="img">
+                        <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
+                        <figcaption>
+                            <h2>Александр Набиев</h2>
+                            <em>Backend</em>
+                        </figcaption>
+                    </div>
                 </div>
-                <div class="img">
-                    <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
-                    <figcaption>
-                        <h2>Александр Набиев</h2>
-                        <em>Backend</em>
-                    </figcaption>
+                <div class = card>
+                    <div class="img">
+                        <img src="{{url_for('.static', filename='image/Вадим.jpg')}}" alt="Вадим Максимов" class="foto">
+                        <figcaption>
+                            <h2>Вадим Максимов</h2>
+                            <em>Backend</em>
+                        </figcaption>
+                    </div>
                 </div>
-                <div class="img">
-                    <img src="{{url_for('.static', filename='image/саня.jpg')}}" alt="Александр Набиев" class="foto">
-                    <figcaption>
-                        <h2>Александр Набиев</h2>
-                        <em>Backend</em>
-                    </figcaption>
+                <div class = card>
+                    <div class="img">
+                        <img src="{{url_for('.static', filename='image/миша.jpg')}}" alt="Михаил Константинов" class="foto">
+                        <figcaption>
+                            <h2>Михаил Константинов</h2>
+                            <em>Frontend</em>
+                        </figcaption>
+                    </div>
                 </div>
             </figure>
         </div>
     </div>
-    <div class="fon2"></div>
+    <div class="fon2">
+        <h1 class="title">О проекте</h1>
+        <div class="bigcard">
+            <p>Предоставленный проект представляет собой задачу поиска оптимального местоположения офиса компании. В Web сервис предоставляется файл с координатами множества точек, и среди них требуется найти ту точку, с которой будет самая оптимальная доставка/посещение других точек, то есть, найти минимальное евклидовое пространство.</p>
+            <img src="{{url_for('.static', filename='image/коорды.jpg')}}" alt="Шаблон точек">
+        </div>
+        <h1 class="title">Алгоритм вычисления</h1>
+        <div class="bigcard">
+            <p> Для нахождения той самой точки мы используем формулу для нахождения евклидового расстояния на плоскости: c = sqrt(x^2 + y^2).
+                Требуется перебрать все точки, найти расстояние от них до других точек, при этом не забывая учитывать дорогу обратно, и произвести на среднее количество посещений точки. Все эти вычисленные единицы суммируются, затем выбирается точка с минимальным результатом.</p>
+                <img src="{{url_for('.static', filename='image/вычисления.jpg')}}" alt="Шаблон точек">
+        </div>
+    </div>
     <div class="fon3"></div>
     <div class="fon4">
         <div class="fat">
         <h1>Узнайте оптимальную точку!</h1>
-            <div class="form">
-                <form method="post" action = "upload" enctype = "multipart/form-data">
-                    <input type="file" name="file" />
-                    <input type="hidden" name="id" value="zalupa"/>
-                    <input type="submit" />
-                </form>
+            <div class="formbox">
+                    <form method="post" action="/" enctype = "multipart/form-data">
+                        <input type="file" name="file"/>
+                        <input type="submit"/>
+                    </form>
             </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script type="text/javascript" charset="utf-8">
-        var socket = io();
-        socket.on('connect', function() {
-            socket.emit('processing_done', {data: 'I\'m connected!'});
-        });
-    </script>
 </body>
 </html>

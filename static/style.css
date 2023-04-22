@@ -1,3 +1,7 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat:700,900&subset=cyrillic");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i&subset=cyrillic');
+
+
 *{
     margin: 0;
 }
@@ -23,8 +27,8 @@ body{
     background-repeat: no-repeat;
     width: 100%;
     height: 700px;
-    background-image: url(image/Фон.jpg);
-    background-size: auto auto;
+    background-image: url(../static/image/Фон.jpg);
+    background-size: cover;
     padding-top: 30px;
 }
 
@@ -32,23 +36,24 @@ body{
     background-repeat: no-repeat;
     width: 100%;
     height: 800px;
-    background-image: url(image/лаба.jpg);
-    background-size: auto auto;
+    background-image: url(../static/image/лаба.jpg);
+    background-size: cover;
+    padding-top: 1px;
 }
 .fon3{
     background-repeat: no-repeat;
     width: 100%;
     height: 800px;
-    background-image: url(image/Эконом.jpg);
-    background-size: auto auto;
+    background-image: url(../static/image/Эконом.jpg);
+    background-size: cover;
 }
 
 .fon4{
     background-repeat: no-repeat;
     width: 100%;
     height: 700px;
-    background-image: url(image/карат.jpg);
-    background-size: auto auto;
+    background-image: url(../static/image/карат.jpg);
+    background-size: cover;
     padding-top: 100px;
 }
 .title{
@@ -59,6 +64,22 @@ body{
   font-size: 64px; /*Определяет размер шрифта элемента*/
   line-height: 75px; /*Задаёт высоту строки текста*/
   text-align: center; /*Определяет горизонтальное выравнивание текста в пределах элемента*/
+  animation-name: header_anim;
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-transform: uppercase;
+}
+.card{
+  width: 270px;
+  height: 320px;
+  background-color: #ededed;
+  display: flex;
+  padding-top: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 5px 10px gray;
+  animation-name: card_anim;
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 .img {
     width: 350px; /*Устанавливает ширину содержимого элемента*/
@@ -95,88 +116,52 @@ body{
     text-shadow: 0px 5px 10px gray;
   }
   em{
-    font-family: 'agency FB';
+    font-size: 20px;
+    font-family:"fulbo";
   }
 
-  .form{
+.bigcard{
+  width: 1300px;
+  height: 270px;
+  display: flex;
+  background-color: #ededed;
+  margin: 0 auto;
+  border-radius: 15px;
+  /*text-shadow: 0px 5px 10px gray;*/
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+.bigcard img{
+  width: 200px;
+  height: 200px;
+}
+
+p{
+  font-size: 25px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: rgb(1, 0, 41);
+}
+
+.formbox{
     background-color: rgb(245, 245, 245); 
     width: 500px;
-    height: 100px;
+    height: 150px;
     margin: auto auto;
     position: relative;
     top: 50%;
-    padding-top: 60px;
-    padding-left: 150px;
+    padding-top: 45px;
+    padding-left:  70px;
     border-radius: 20px;
-  }
-  .form form{
-    width: 500px;
-    margin: 0 auto;
-  }
-
-  /*.input-file-text {
-    padding: 0 10px;
-    line-height: 40px;
-    text-align: left;
-    height: 40px;
-    display: block;
-    float: left;
     box-sizing: border-box;
-    width: 200px;
-    border-radius: 6px 0px 0 6px;
-    border: 1px solid #ddd;
-  }
-  .input-file-btn {
-  position: relative;
-    display: inline-block;
-    cursor: pointer;
-    outline: none;
-    text-decoration: none;
-    font-size: 14px;
-    vertical-align: middle;
-    color: rgb(255 255 255);
-    text-align: center;
-    border-radius: 0 4px 4px 0;
-    background-color: #5c8eca;
-    line-height: 22px;
-    height: 40px;
-    padding: 10px 20px;
-    box-sizing: border-box;
-    border: none;
-    margin: 0;
-    transition: background-color 0.2s;
-  }
-  .input-file input[type=file] {
-    position: absolute;
-    z-index: -1;
-    opacity: 0;
-    display: block;
-    width: 0;
-    height: 0;
-  }
-   
+}
 
-  .input-file input[type=file]:focus + .input-file-btn {
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-  }
-   
 
-  .input-file:hover .input-file-btn {
-    background-color: #7ac6f6;
-  }
-  .input-file:active .input-file-btn {
-    background-color: #4a5fc8;
-  }
-   
+.fon2 .title{
+  margin-top: 15px;
+}
 
-  .input-file input[type=file]:disabled + .input-file-btn {
-    background-color: #eee;
-  }
-
-  span{
-    font-family: 'KTF jermilov solid';
-  }
-  */
   .fon4 h1{
     font-weight: 500; /*Устанавливает насыщенность шрифта*/
     font-size: 64px; /*Определяет размер шрифта элемента*/
@@ -188,8 +173,35 @@ body{
     text-shadow: 2px 1px 1px black;
   }
   .fat{
-    padding-top: 150px;
-    margin-left: 300px;
-    width: 900px;
+    width: 100%;
     height:300px ;
+
   }
+
+  .formbox form{
+    padding-top: 10px;
+  }
+  input{
+    height: 40px;
+    font-family: "fulbo";
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+
+@keyframes header_anim {
+    from {
+      transform: translateX(-120%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes card_anim {
+    from {
+      transform: translateX(500%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
