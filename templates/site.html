@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site</title> 
     <link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
     <script>
         window.onload = function() {
             if({% if scroll=="true"%}true{% else %}false{%endif%}){
@@ -17,17 +17,17 @@
                 );
                 window.scrollTo(0, scrollHeight);
             }
+            
+            var socket = io.connect("http://127.0.0.1:5000/");
             {% if id %}
             document.cookie = "id="+encodeURIComponent("{{id}}");
+            socket.emit("start_process", "{{id}}");
             {%endif%}
-            socket.on('my_response', function(msg, cb) {
-                $('#log').append('<br>' + $('<div/>').text('logs #' + msg.count + ': ' + msg.data).html());
-                if (cb)
-                    cb();
+            socket.on("processing_done",(id)=>{
+                window.location.replace("http://127.0.0.1:5000/map");
             });
         }
     </script>
-</head>
 <body>
     <div class="nav"><h2>ISERV.карта</h></div>
     <div class="fon1">
@@ -82,7 +82,7 @@
         <div class="fat">
         <h1>Узнайте оптимальную точку!</h1>
             <div class="formbox">
-                    <form method="post" action="/" enctype = "multipart/form-data">
+                    <form id="snd_file" method="post" action="/" enctype = "multipart/form-data">
                         <input type="file" name="file"/>
                         <input type="submit"/>
                     </form>

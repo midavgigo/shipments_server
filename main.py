@@ -1,26 +1,18 @@
-from flask import Flask, render_template, request
-from flask_socketio import SocketIO, send
+from flask import Flask, render_template, request, redirect
+from flask_socketio import SocketIO, emit
+
 import folium
 from DataHandler.DataHandler import DataHandler
+import threading
+import time
+import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "very_secretno"
 
 socket = SocketIO(app, cors_allowed_origins="*")
 
-@socket.on("processing_done")
-def check_file(data):
-    print(data["data"])
-    send(data)
-
 main_html = "site.html"
-
-@app.route("/map")
-def render_map():
-    m = folium.Map()
-    tooltip = "Click me!"
-    folium.Marker([45.3288, -121.6625], popup="<i>Mt. Hood Meadows</i>", tooltip=tooltip).add_to(m)
-    return m.get_root().render()
 
 working_id = set()
 deleted_id = set()
@@ -45,6 +37,30 @@ def del_id(i):
     if i != max(working_id) and i != min(working_id):
         deleted_id.add(i)
     working_id.discard(i)
+
+m = folium.Map()
+
+def process_file(id):
+    dat = DataHandler("files/"+id, 10000)
+    opt = dat.get_optimal_coordinates()
+    folium.Marker([opt[0], opt[1]], icon=folium.Icon(color="red")).add_to(m)
+    for i in dat.get_data_array():
+        #folium.Marker([i[1], i[2]], popup="<i>"+str(i[0])+"</i>").add_to(m)
+        folium.PolyLine([(i[1], i[2]), (opt[0], opt[1])]).add_to(m)
+
+@socket.on("start_process")
+def start_process(id):
+    t1 = threading.Thread(target=process_file, args=(id), daemon=True)
+    t1.start()
+    t1.join()
+    del_id(int(id))
+    socket.emit('processing_done', id)
+    os.remove("files/"+id)
+
+@app.route("/map")
+def render_map():
+    return m.get_root().render()
+
 
 @app.route("/", methods=["POST", "GET"])
 def first_page():
