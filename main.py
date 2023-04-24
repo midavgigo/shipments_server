@@ -52,8 +52,8 @@ def process_file(id):
     try:
         folium.Marker([opt[0], opt[1]], icon=folium.Icon(color="red")).add_to(m[id])
         for i in dat.get_data_array():
-            #folium.Marker([i[1], i[2]], popup="<i>"+str(i[0])+"</i>").add_to(m[id])
-            folium.PolyLine([(i[1], i[2]), (opt[0], opt[1])]).add_to(m[id])
+            folium.Circle([float(i[0]), float(i[1])], radius=2, color="blue").add_to(m[id])
+            #folium.PolyLine([(i[1], i[2]), (opt[0], opt[1])]).add_to(m[id])
         return_map[id] = 1
         return
     except ValueError:
