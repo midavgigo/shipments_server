@@ -22,9 +22,14 @@
             {% if id %}
             document.cookie = "id="+encodeURIComponent("{{id}}");
             socket.emit("start_process", "{{id}}");
+            console.log("start process");
             {%endif%}
             socket.on("processing_done",(id)=>{
-                window.location.replace("http://127.0.0.1:5000/map");
+                if(id == "-1"){
+                    alert("Произошла какая-то ошибка при обработке вашего файла, просим прощения за неудобство");
+                }else{
+                    window.location.replace("http://127.0.0.1:5000/map/"+id);
+                }
             });
         }
     </script>
@@ -81,12 +86,20 @@
     <div class="fon4">
         <div class="fat">
         <h1>Узнайте оптимальную точку!</h1>
-            <div class="formbox">
-                    <form id="snd_file" method="post" action="/" enctype = "multipart/form-data">
-                        <input type="file" name="file"/>
-                        <input type="submit"/>
-                    </form>
-            </div>
+            {% if can_send == "true" %}
+                <div class="formbox">
+                        <form id="snd_file" method="post" action="/" enctype = "multipart/form-data">
+                            <input type="file" name="file"/>
+                            <input type="submit"/>
+                        </form>
+                </div>
+            {% else %}
+                <div class="formbox">
+                    <a>
+                        Ожидайте обработки файла. После ее окончания вы будете перенаправлены на странницу с картой.
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
 </body>

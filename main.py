@@ -6,6 +6,8 @@ from DataHandler.DataHandler import DataHandler
 import threading
 import time
 import os
+import traceback
+import logging
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "very_secretno"
@@ -38,28 +40,50 @@ def del_id(i):
         deleted_id.add(i)
     working_id.discard(i)
 
-m = folium.Map()
+m = dict()
+
+return_map = dict()
 
 def process_file(id):
+    print("start for", id)
+    m[id] = folium.Map()
     dat = DataHandler("files/"+id, 10000)
     opt = dat.get_optimal_coordinates()
-    folium.Marker([opt[0], opt[1]], icon=folium.Icon(color="red")).add_to(m)
-    for i in dat.get_data_array():
-        #folium.Marker([i[1], i[2]], popup="<i>"+str(i[0])+"</i>").add_to(m)
-        folium.PolyLine([(i[1], i[2]), (opt[0], opt[1])]).add_to(m)
+    try:
+        folium.Marker([opt[0], opt[1]], icon=folium.Icon(color="red")).add_to(m[id])
+        for i in dat.get_data_array():
+            #folium.Marker([i[1], i[2]], popup="<i>"+str(i[0])+"</i>").add_to(m[id])
+            folium.PolyLine([(i[1], i[2]), (opt[0], opt[1])]).add_to(m[id])
+        return_map[id] = 1
+        return
+    except ValueError:
+        print("пока не знаю что делать")
+        return_map[id] = 0
+    except Exception as e:
+        logging.error(traceback.format_exc())
+        socket.emit('processing_done', "-1")
+        return_map[id] = -1
+        return
 
 @socket.on("start_process")
 def start_process(id):
     t1 = threading.Thread(target=process_file, args=(id), daemon=True)
     t1.start()
     t1.join()
-    del_id(int(id))
-    socket.emit('processing_done', id)
+    if return_map[id] != -1:
+        print("done for", id)
+        del_id(int(id))
+        socket.emit('processing_done', id)
     os.remove("files/"+id)
 
-@app.route("/map")
-def render_map():
-    return m.get_root().render()
+@app.route("/map/<id>")
+def render_map(id):
+    try:
+        temp = m[id]
+        del m[id]
+        return temp.get_root().render()
+    except KeyError:
+        return render_template(main_html, scroll="false", can_send="true")
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -68,9 +92,9 @@ def first_page():
         f = request.files["file"]
         id = get_id()
         f.save("files/"+str(id))
-        return render_template(main_html, scroll="true", id = str(id))
+        return render_template(main_html, scroll="true", id = str(id), can_send="false")
     else:
-        return render_template(main_html, scroll="false")
+        return render_template(main_html, scroll="false", can_send="true")
 
 @app.route("/test")
 def test_page():
